@@ -18,9 +18,18 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+# from vacancies.views import VacancyViewSet
+from rest_framework import routers
+
+# router = routers.SimpleRouter()
+# router.register(r'vacancy', VacancyViewSet)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api-auth/', include('rest_framework.urls')),
+
+    # path('api/v1/', include(router.urls)), #  http://127.0.0.1:8000/api/v1/vacancy/
     path('vacancy/', include('vacancies.urls')),
     path('company/', include('companies.urls')),
 ]
