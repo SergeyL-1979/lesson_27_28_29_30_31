@@ -19,7 +19,8 @@ class VacancyListSerializer(serializers.ModelSerializer):
         fields = ["id", "text", "slug", "status", "created", "username", "skills"]
 
 class VacancyDetailSerializer(serializers.ModelSerializer):
-    skills = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+    skills = serializers.SlugRelatedField(
+        many=True, read_only=True, slug_field="name")
     class Meta:
         model = Vacancy
         fields = "__all__"
