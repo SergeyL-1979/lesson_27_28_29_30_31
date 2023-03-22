@@ -4,6 +4,12 @@ from rest_framework.relations import PrimaryKeyRelatedField
 from vacancies.models import Vacancy, Skill
 
 
+class SkillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Skill
+        fields = '__all__'
+
+
 # class VacancySerializer(serializers.Serializer):
 #     id = serializers.IntegerField()
 #     text = serializers.CharField(max_length=1000)

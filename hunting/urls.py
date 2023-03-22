@@ -21,8 +21,11 @@ from django.urls import path, include
 # from vacancies.views import VacancyViewSet
 from rest_framework import routers
 
-# router = routers.SimpleRouter()
+from vacancies.views import SkillsViewSet
+
+router = routers.SimpleRouter()
 # router.register(r'vacancy', VacancyViewSet)
+router.register(r'skill', SkillsViewSet)
 
 
 urlpatterns = [
@@ -30,9 +33,13 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
 
     # path('api/v1/', include(router.urls)), #  http://127.0.0.1:8000/api/v1/vacancy/
+    # path('', include(router.urls)), # один вариант прописать роутеры(routers)
+
     path('vacancy/', include('vacancies.urls')),
     path('company/', include('companies.urls')),
 ]
+
+urlpatterns += router.urls # второй вариант прописать роутеры(routers)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

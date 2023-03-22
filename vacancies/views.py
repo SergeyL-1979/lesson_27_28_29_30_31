@@ -3,7 +3,7 @@ import json
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.db.models import Count, Avg
+from django.db.models import Count, Avg, Q, F
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -15,16 +15,50 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView,CreateAPIView, 
 from rest_framework.viewsets import ModelViewSet
 
 from vacancies.models import Vacancy, Skill
-from vacancies.serializers import VacancyListSerializer, VacancyDetailSerializer, VacancyCreateSerializer, VacancyUpdateSerializer, VacancyDestroySerializer
+from vacancies.serializers import VacancyListSerializer, VacancyDetailSerializer, VacancyCreateSerializer, \
+    VacancyUpdateSerializer, VacancyDestroySerializer, SkillSerializer
 
 
 def hello(request):
     return HttpResponse("Hy")
 
-# @method_decorator(csrf_exempt, name='dispatch') # отключаем проверку csrf
+
+class SkillsViewSet(ModelViewSet):
+    queryset = Skill.objects.all()
+    serializer_class = SkillSerializer
+
+
 class VacancyListView(ListAPIView):
     queryset = Vacancy.objects.all()
     serializer_class = VacancyListSerializer
+
+    def get(self, request, *args, **kwargs):
+        vacancy_text = request.GET.get('text', None)
+        if vacancy_text:
+            self.queryset = self.queryset.filter(
+                text__icontains=vacancy_text
+            )
+
+        # skill_name = request.GET.get('skill', None)
+        # if skill_name:
+        #     self.queryset = self.queryset.filter(
+        #         skills__name__icontains=skill_name
+        #     )
+
+        # === Поиск по вхождению ИЛИ ===
+        skills = request.GET.getlist('skill', None)
+        skills_q = None
+        for skill in skills:
+            if skills_q is None:
+                skills_q = Q(skills__name__icontains=skill)
+            else:
+                skills_q |= Q(skills__name__icontains=skill)
+
+        if skills_q:
+            self.queryset = self.queryset.filter(skills_q)
+
+        return super().get(request, *args, **kwargs)
+
 
 class VacancyDetailView(RetrieveAPIView):
     queryset = Vacancy.objects.all()
@@ -45,31 +79,46 @@ class VacancyDeleteView(DestroyAPIView):
     serializer_class = VacancyDestroySerializer
 
 
-class UserVacancyDetailView(View):
-    def get(self, request):
-        # annotate - создает дополнительную колонку куда кладет результат агрегирующей функции(Count, Sum)
-        user_qs = User.objects.annotate(vacancies=Count('vacancy'))
+class VacancyLikeView(UpdateAPIView):
+    queryset = Vacancy.objects.all()
+    serializer_class = VacancyDetailSerializer
 
-        paginator = Paginator(user_qs, settings.TOTAL_ON_PAGE)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
+    def put(self, request, *args, **kwargs):
+        Vacancy.objects.filter(pk__in=request.data).update(likes=F('likes') + 1)
 
-        users = []
-        for user in page_obj:
-            users.append({
-                "id": user.id,
-                "name": user.username,
-                "vacancies": user.vacancies,
-            })
+        return JsonResponse(
+            VacancyDetailSerializer(Vacancy.objects.filter(pk__in=request.data), many=True).data,
+            safe=False,
+        )
 
-        response = {
-            "items": users,
-            "total": paginator.count,
-            "num_page": paginator.num_pages,
-            "avg": user_qs.aggregate(avg=Avg('vacancies'))['avg']
-        }
 
-        return JsonResponse(response, )
+
+# @method_decorator(csrf_exempt, name='dispatch') # отключаем проверку csrf
+# class UserVacancyDetailView(View):
+#     def get(self, request):
+#         # annotate - создает дополнительную колонку куда кладет результат агрегирующей функции(Count, Sum)
+#         user_qs = User.objects.annotate(vacancies=Count('vacancy'))
+#
+#         paginator = Paginator(user_qs, settings.TOTAL_ON_PAGE)
+#         page_number = request.GET.get("page")
+#         page_obj = paginator.get_page(page_number)
+#
+#         users = []
+#         for user in page_obj:
+#             users.append({
+#                 "id": user.id,
+#                 "name": user.username,
+#                 "vacancies": user.vacancies,
+#             })
+#
+#         response = {
+#             "items": users,
+#             "total": paginator.count,
+#             "num_page": paginator.num_pages,
+#             "avg": user_qs.aggregate(avg=Avg('vacancies'))['avg']
+#         }
+#
+#         return JsonResponse(response, )
 
 # ========================= LESSON 28 ======================================
     # def get(self, request, *args, **kwargs):
