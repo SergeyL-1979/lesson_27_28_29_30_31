@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # === MY APPS ===
+    'authentication',
     'vacancies',
     'companies',
 
@@ -163,26 +164,26 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
-AUTH_USER_MODEL = ''
+AUTH_USER_MODEL = 'authentication.User'
 
-LOGGING = {
-    'disable_existing_loggers': False,
-    'version': 1,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'level': 'DEBUG'
-        }
-
-    },
-    'loggers': {
-        '': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate':False
-        },
-        'django.db':{
-            'level':'DEBUG',
-        },
-    }
-}
+# LOGGING = {
+#     'disable_existing_loggers': False,
+#     'version': 1,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#             'level': 'DEBUG'
+#         }
+#
+#     },
+#     'loggers': {
+#         '': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#             'propagate':False
+#         },
+#         'django.db':{
+#             'level':'DEBUG',
+#         },
+#     }
+# }
