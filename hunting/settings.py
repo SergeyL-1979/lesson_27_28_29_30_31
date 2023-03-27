@@ -44,6 +44,8 @@ INSTALLED_APPS = [
 
     # ==== REST FRAMEWORK ====
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
 
     # === MY APPS ===
     'authentication',
@@ -156,6 +158,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Список или кортеж классов рендереров, определяющий набор рендереров по умолчанию,
 # которые могут быть использованы при возврате объекта Response.
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+    ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',

@@ -37,6 +37,7 @@ urlpatterns = [
 
     path('vacancy/', include('vacancies.urls')),
     path('company/', include('companies.urls')),
+    path('user/', include('authentication.urls')),
 ]
 
 urlpatterns += router.urls # второй вариант прописать роутеры(routers)

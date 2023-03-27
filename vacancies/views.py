@@ -1,22 +1,14 @@
-import json
-
-from django.conf import settings
-from django.contrib.auth.models import User
-from django.core.paginator import Paginator
-from django.db.models import Count, Avg, Q, F
+from django.db.models import Q, F
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
-from django.views import View
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from rest_framework.generics import ListAPIView, RetrieveAPIView,CreateAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView,CreateAPIView, \
+    UpdateAPIView, DestroyAPIView
 from rest_framework.viewsets import ModelViewSet
 
 from vacancies.models import Vacancy, Skill
-from vacancies.serializers import VacancyListSerializer, VacancyDetailSerializer, VacancyCreateSerializer, \
-    VacancyUpdateSerializer, VacancyDestroySerializer, SkillSerializer
+from vacancies.serializers import VacancyListSerializer, VacancyDetailSerializer, \
+    VacancyCreateSerializer, VacancyUpdateSerializer, \
+    VacancyDestroySerializer, SkillSerializer
 
 
 def hello(request):
