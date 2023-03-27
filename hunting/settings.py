@@ -159,6 +159,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
+AUTH_USER_MODEL = ''
+
 LOGGING = {
     'disable_existing_loggers': False,
     'version': 1,
