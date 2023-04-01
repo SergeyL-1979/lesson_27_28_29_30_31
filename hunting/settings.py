@@ -152,7 +152,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+TOTAL_ON_PAGE = 10
 
 # DEFAULT_RENDERER_CLASSES
 # Список или кортеж классов рендереров, определяющий набор рендереров по умолчанию,
