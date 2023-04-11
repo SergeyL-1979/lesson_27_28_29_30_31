@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'vacancies',
     'companies',
 
+    # === OpenAPI 3.0 drf-spectacular ===
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -170,6 +172,16 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
+    # YOUR SETTINGS
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Hunting Project API',
+    'DESCRIPTION': 'Hunting API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
 }
 
 AUTH_USER_MODEL = 'authentication.User'
